@@ -96,8 +96,6 @@ int main(int argc, char** argv)
         l2 = htons(l);
         fwrite(&l2, 1, sizeof(unsigned short), out);
         ret = fwrite(cmsg->data, 1, l, out);
-        if (count % 100 == 0)
-            printf("wrote %d bytes [msgcnt=%u]\n", ret, count);
         ++count;
         if (ret != l)
             exit_program_err(1, "fwrite");

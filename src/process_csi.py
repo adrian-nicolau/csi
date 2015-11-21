@@ -12,6 +12,9 @@ import os
 import scipy.io as sio
 
 
+PNGDIR = '/home/adrian/workspace/csi/png/'
+MATDIR = '/home/adrian/workspace/csi/mat/'
+
 label_on = False
 
 
@@ -61,7 +64,7 @@ if __name__ == '__main__':
 
     dat_path = os.path.abspath(sys.argv[1])
     dat_filename = os.path.splitext(os.path.basename(dat_path))[0]
-    plot_dir = '../png/' + dat_filename + '_' + \
+    plot_dir = PNGDIR + dat_filename + '_' + \
         datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '/'
     os.mkdir(plot_dir)
 
@@ -77,7 +80,7 @@ if __name__ == '__main__':
         #    continue
 
         octave.eval("csi = get_scaled_csi(csi_entry);")
-        octave.eval("save -6 ../mat/temp.mat csi;")
+        octave.eval("save -6 " + MATDIR + "temp.mat csi;")
 
-        mat_contents = sio.loadmat('../mat/temp.mat')['csi']
+        mat_contents = sio.loadmat(MATDIR + 'temp.mat')['csi']
         plot_csi(mat_contents, pkt)
