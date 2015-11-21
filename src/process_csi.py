@@ -12,11 +12,11 @@ import os
 import scipy.io as sio
 
 
-haz_label = False
+label_on = False
 
 
 def plot_csi(csi_contents, pkt_number):
-    global haz_label
+    global label_on, plot_dir
 
     Ntx, Nrx = csi_contents.shape[:2]
     if Ntx != 1:
@@ -37,11 +37,11 @@ def plot_csi(csi_contents, pkt_number):
 
     # csi_contents = np.transpose(csi_contents)
 
-    if not haz_label:
+    if not label_on:
         plot(csi_contents[0], label='RX Antenna A')
         plot(csi_contents[1], label='RX Antenna B')
         plot(csi_contents[2], label='RX Antenna C')
-        haz_label = True
+        label_on = True
     else:
         plot(csi_contents[0])
         plot(csi_contents[1])
@@ -51,7 +51,7 @@ def plot_csi(csi_contents, pkt_number):
     xlabel('Subcarrier index')
     ylabel('SNR [dB]')
     legend(loc='lower right')
-    savefig('../png/plot' + '%04d' % pkt_number + '.png', bbox_inches='tight')
+    savefig(plot_dir + '%04d' % pkt_number + '.png', bbox_inches='tight')
 
 if __name__ == '__main__':
 
@@ -59,17 +59,22 @@ if __name__ == '__main__':
         print 'Usage: $ %s <.dat file>' % sys.argv[0]
         sys.exit(1)
 
-    dat_file = os.path.abspath(sys.argv[1])
+    dat_path = os.path.abspath(sys.argv[1])
+    dat_filename = os.path.splitext(os.path.basename(dat_path))[0]
+    plot_dir = '../png/' + dat_filename + '_' + \
+        datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '/'
+    os.mkdir(plot_dir)
+
     octave.addpath('~/csi/linux-80211n-csitool-supplementary/matlab')
     # FAQ #2
-    octave.eval("csi_trace = read_bf_file('" + dat_file + "');")
+    octave.eval("csi_trace = read_bf_file('" + dat_path + "');")
     pkts = octave.eval("rows(csi_trace);")
     print 'Trace has', pkts, 'packets.'
 
     for pkt in range(1, int(pkts) + 1):  # Octave indexes from 1
         octave.eval("csi_entry = csi_trace{" + str(pkt) + "};")
-        if octave.eval("csi_entry.Nrx;") != 3:
-            continue
+        # if octave.eval("csi_entry.Nrx;") != 3:
+        #    continue
 
         octave.eval("csi = get_scaled_csi(csi_entry);")
         octave.eval("save -6 ../mat/temp.mat csi;")
