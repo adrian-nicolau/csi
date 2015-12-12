@@ -5,7 +5,7 @@ if [[ $# -ne 2 ]]; then
     exit 1
 fi
 
-# Start collecting CSI for a adaptive ping.
+# Start collecting CSI for an adaptive ping.
 sudo ext/log_to_file_3ant $2 &
 sudo ping -Aq -w $1 192.168.43.1
 
