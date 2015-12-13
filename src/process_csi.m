@@ -9,7 +9,7 @@ db = @(X) 10 * log10(abs(X).^2)
 csi_trace = read_bf_file(argv(){1});
 csi_entry = csi_trace{1};
 csi = get_scaled_csi(csi_entry);
-figure("visible", "off");
+figure('visible', 'off');
 plot(db(abs(squeeze(csi).')), 'LineWidth', 4);
 axis([0 30 5 30]);
 legend('RX Antenna A', 'RX Antenna B', 'RX Antenna C', 'Location', 'SouthEast' );
