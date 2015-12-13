@@ -13,7 +13,7 @@ var util = require('util'),
 csiproc.stdout.on('data', function(data) { // register one or more handlers
   console.log('stdout: ' + data);
   if (data.toString().lastIndexOf('REFRESH', 0) === 0) {
-    mainWindow.loadURL('file://' + data.toString().split(':')[1]);
+    mainWindow.loadURL(`file://${__dirname}/img/plot.png`);
   }
 });
 
@@ -43,8 +43,8 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 695,
-    height: 550
+    width: 768,
+    height: 576
   });
 
   // and load the index.html of the app.

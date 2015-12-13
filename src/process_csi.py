@@ -40,22 +40,22 @@ def plot_csi(csi_contents, pkt_number):
 
     # csi_contents = np.transpose(csi_contents)
 
-    # if not label_on:
-    plot(csi_contents[0], label='RX Antenna A')
-    plot(csi_contents[1], label='RX Antenna B')
-    plot(csi_contents[2], label='RX Antenna C')
-    # label_on = True
-    # else:
-    #     plot(csi_contents[0])
-    #     plot(csi_contents[1])
-    #     plot(csi_contents[2])
+    if not label_on:
+        plot(csi_contents[0], label='RX Antenna A')
+        plot(csi_contents[1], label='RX Antenna B')
+        plot(csi_contents[2], label='RX Antenna C')
+        label_on = True
+    else:
+        plot(csi_contents[0])
+        plot(csi_contents[1])
+        plot(csi_contents[2])
 
     axis([0, 30, 5, 30])
     xlabel('Subcarrier index')
     ylabel('SNR [dB]')
     legend(loc='lower right')
     savefig(plot_dir + '%04d' % pkt_number + '.png', bbox_inches='tight')
-    close()
+    # close()
 
 if __name__ == '__main__':
 

@@ -99,6 +99,9 @@ int main(int argc, char** argv)
         ++count;
         if (ret != l)
             exit_program_err(1, "fwrite");
+
+        /* Electron CSI Visualizer - exit after one packet. */
+        break;
     }
 
     exit_program(0);
