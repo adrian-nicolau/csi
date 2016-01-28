@@ -3,6 +3,9 @@ const electron = require('electron');
 const app = electron.app; // Module to control application life.
 const BrowserWindow = electron.BrowserWindow; // Module to create native browser window.
 
+const connect = require('connect');
+const serveStatic = require('serve-static');
+
 var workspace = '/home/adrian/workspace/csi/';
 
 var util = require('util'),
@@ -49,6 +52,9 @@ app.on('ready', function() {
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+  // serve plots on LAN
+  connect().use(serveStatic(`${__dirname}/img`)).listen(8080);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

@@ -24,5 +24,9 @@
   "homepage": "https://github.com/atom/electron-quick-start#readme",
   "devDependencies": {
     "electron-prebuilt": "^0.35.0"
+  },
+  "dependencies": {
+    "connect": "^3.4.0",
+    "serve-static": "^1.10.0"
   }
 }

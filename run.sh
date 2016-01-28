@@ -5,6 +5,9 @@ if [[ $# -ne 2 ]]; then
     exit 1
 fi
 
+# Allow me to exit the room :-).
+sleep 10
+
 # Start collecting CSI for an adaptive ping.
 sudo ext/log_to_file_3ant $2 &
 sudo ping -Aq -w $1 192.168.43.1
