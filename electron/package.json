@@ -1,32 +1,31 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "csi-visualizer",
+  "version": "0.0.1",
+  "description": "A minimal CSI visualizer",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atom/electron-quick-start.git"
+    "url": "git+https://github.com/adrian-nicolau/csi.git"
   },
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial"
+    "csi",
+    "802.11n",
+    "wi-fi"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Adrian NICOLAU",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/atom/electron-quick-start/issues"
+    "url": "https://github.com/adrian-nicolau/csi/issues"
   },
-  "homepage": "https://github.com/atom/electron-quick-start#readme",
+  "homepage": "http://dhalperi.github.io/linux-80211n-csitool/",
   "devDependencies": {
-    "electron-prebuilt": "^0.35.0"
+    "electron-prebuilt": "^1.1.1"
   },
   "dependencies": {
-    "connect": "^3.4.0",
-    "serve-static": "^1.10.0"
+    "connect": "^3.4.1",
+    "serve-static": "^1.10.2"
   }
 }

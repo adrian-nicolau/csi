@@ -6,12 +6,10 @@ const BrowserWindow = electron.BrowserWindow; // Module to create native browser
 const connect = require('connect');
 const serveStatic = require('serve-static');
 
-var workspace = '/home/adrian/workspace/csi/';
-
 var util = require('util'),
   spawn = require('child_process').spawn,
   // the second arg is the command options
-  csiproc = spawn(workspace + 'electron/electron-run.sh', ['2', workspace + 'dat/electron.dat']);
+  csiproc = spawn(__dirname + '/electron-run.sh', ['2', __dirname + '/../dat/electron.dat']);
 
 csiproc.stdout.on('data', function(data) { // register one or more handlers
   console.log('stdout: ' + data);
