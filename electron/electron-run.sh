@@ -2,8 +2,8 @@
 
 ws='/home/adrian/workspace/csi'
 
-# Start and adaptive ping for the whole script run.
-sudo ping -Aq 192.168.43.1 &
+# Start an adaptive ping for the whole script run.
+ping -Aq 192.168.43.1 &
 
 while true; do
   # Start collecting CSI.
