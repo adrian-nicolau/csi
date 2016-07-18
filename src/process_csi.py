@@ -8,14 +8,35 @@ Created on Jul 29, 2015
 from oct2py import octave
 from pylab import *  # @UnusedWildImport
 
+import json
 import os
 import scipy.io as sio
+import sys
+
+from pprint import pprint
+from random import randint
 
 
 PNGDIR = '/home/adrian/workspace/csi/png/'
 MATDIR = '/home/adrian/workspace/csi/mat/'
 
 label_on = False
+csi_dict = {}
+
+
+def jsonify_csi(csi_contents, rssi, pkt_index, xpos, ypos):
+
+    csi_contents = csi_contents[0]  # we only have the RX dimension
+    csi_node = {}
+    csi_node['index'] = pkt_index
+    csi_node['csi_a'] = [str(c) for c in csi_contents[0]]
+    csi_node['csi_b'] = [str(c) for c in csi_contents[1]]
+    csi_node['csi_c'] = [str(c) for c in csi_contents[2]]
+    csi_node['rssi_a'] = rssi[0]
+    csi_node['rssi_b'] = rssi[1]
+    csi_node['rssi_c'] = rssi[2]
+
+    csi_dict[str((xpos, ypos))] = csi_node
 
 
 def plot_csi(csi_contents, pkt_number):
@@ -79,9 +100,16 @@ if __name__ == '__main__':
         octave.eval("csi_entry = csi_trace{" + str(pkt) + "};")
         # if octave.eval("csi_entry.Nrx;") != 3:
         #    continue
+        rssi_a, rssi_b, rssi_c = octave.eval("csi_entry.rssi_a;"), \
+            octave.eval("csi_entry.rssi_b;"), octave.eval("csi_entry.rssi_c;")
 
         octave.eval("csi = get_scaled_csi(csi_entry);")
         octave.eval("save -6 " + MATDIR + "temp.mat csi;")
 
         mat_contents = sio.loadmat(MATDIR + 'temp.mat')['csi']
         plot_csi(mat_contents, pkt)
+        jsonify_csi(mat_contents, [rssi_a, rssi_b, rssi_c], pkt,
+            xpos=randint(0, 21), ypos=randint(0, 42))
+
+    with open('json/data.json', 'wt') as outfile:
+        json.dump(csi_dict, outfile, sort_keys=True, indent=4)

@@ -6,11 +6,11 @@ if [[ $# -ne 2 ]]; then
 fi
 
 # Allow me to exit the room :-).
-sleep 10
+# sleep 10
 
 # Start collecting CSI for an adaptive ping.
 sudo ext/log_to_file_3ant $2 &
-sudo ping -Aq -w $1 192.168.43.1
+sudo ping -Aq -w $1 192.168.1.1
 
 # Stop log_to_file via SIGINT, not SIGKILL.
 sudo killall -s SIGINT log_to_file_3ant
