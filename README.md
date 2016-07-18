@@ -10,4 +10,5 @@ Client-AP Angle Measurement with 802.11n Channel State Information
 # dev
 
 `[csi] $ sudo ./run.sh <time_to_run> <.dat file>`
+
 `[csi/electron] $ sudo npm start`
