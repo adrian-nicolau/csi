@@ -24,7 +24,7 @@ while true; do
     # sudo killall -s SIGINT log_to_file_3ant
 
     # Process the data and show the results.
-    ./src/process_csi.py dat/temp.dat $xpos $ypos
+    ./src/collect.py dat/temp.dat $xpos $ypos
     # PNGDIR=`ls -t png/ | head -n 1`
     # eog png/$PNGDIR/0001.png
 

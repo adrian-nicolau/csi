@@ -17,8 +17,8 @@ import sys
 from pprint import pprint
 
 
-PNGDIR = '/home/adrian/workspace/csi/png/'
-MATDIR = '/home/adrian/workspace/csi/mat/'
+PNGDIR = os.path.abspath('.') + '/png/'
+MATDIR = os.path.abspath('.') + '/mat/'
 
 label_on = False
 
@@ -110,8 +110,6 @@ if __name__ == '__main__':
 
     for pkt in range(1, int(pkts) + 1):  # Octave indexes from 1
         octave.eval("csi_entry = csi_trace{" + str(pkt) + "};")
-        # if octave.eval("csi_entry.Nrx;") != 3:
-        #    continue
         rssi_a, rssi_b, rssi_c = octave.eval("csi_entry.rssi_a;"), \
             octave.eval("csi_entry.rssi_b;"), octave.eval("csi_entry.rssi_c;")
 
