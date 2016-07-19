@@ -1,23 +1,34 @@
 #!/bin/bash
 
-if [[ $# -ne 2 ]]; then
-    echo "Usage: # $0 <time to run> <.dat file>"
-    exit 1
-fi
+# if [[ $# -ne 1 ]]; then
+#     echo "Usage: # $0 <.dat file>"
+#     exit 1
+# fi
 
-# Allow me to exit the room :-).
-# sleep 10
+while true; do
+    read -p "What is your X? " xpos
+    read -p "What is your Y? " ypos
 
-# Start collecting CSI for an adaptive ping.
-sudo ext/log_to_file_3ant $2 &
-sudo ping -Aq -w $1 192.168.1.1
+    echo "You are at ($xpos, $ypos)"
 
-# Stop log_to_file via SIGINT, not SIGKILL.
-sudo killall -s SIGINT log_to_file_3ant
+    # Allow me to exit the room :-).
+    # sleep 10
 
-# Process the data and show the results.
-./src/process_csi.py $2
-PNGDIR=`ls -t png/ | head -n 1`
-eog png/$PNGDIR/0001.png
+    # Start collecting CSI for an adaptive ping.
+    sudo ping -Aq 192.168.1.1 &
+    sudo ext/log_to_file_3ant_10pkts dat/temp.dat
+
+    sudo killall ping
+
+    # # Stop log_to_file via SIGINT, not SIGKILL.
+    # sudo killall -s SIGINT log_to_file_3ant
+
+    # Process the data and show the results.
+    ./src/process_csi.py dat/temp.dat $xpos $ypos
+    # PNGDIR=`ls -t png/ | head -n 1`
+    # eog png/$PNGDIR/0001.png
+
+    read -p "Press something to get to next iteration.."
+done
 
 exit 0

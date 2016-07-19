@@ -11,18 +11,19 @@ from pylab import *  # @UnusedWildImport
 import json
 import os
 import scipy.io as sio
+import shutil
 import sys
 
 from pprint import pprint
-from random import randint
 
 
 PNGDIR = '/home/adrian/workspace/csi/png/'
 MATDIR = '/home/adrian/workspace/csi/mat/'
 
 label_on = False
-csi_dict = {}
 
+VERMAGIC = datetime.datetime.now().strftime("data_%m%d")
+JSON_NAME = 'json/' + VERMAGIC + '.json'
 
 def jsonify_csi(csi_contents, rssi, pkt_index, xpos, ypos):
 
@@ -36,7 +37,7 @@ def jsonify_csi(csi_contents, rssi, pkt_index, xpos, ypos):
     csi_node['rssi_b'] = rssi[1]
     csi_node['rssi_c'] = rssi[2]
 
-    csi_dict[str((xpos, ypos))] = csi_node
+    csi_dict[str((xpos, ypos))].append(csi_node)
 
 
 def plot_csi(csi_contents, pkt_number):
@@ -80,14 +81,16 @@ def plot_csi(csi_contents, pkt_number):
 
 if __name__ == '__main__':
 
-    if len(sys.argv) < 2:
-        print 'Usage: $ %s <.dat file>' % sys.argv[0]
+    if len(sys.argv) < 4:
+        print 'Usage: $ %s <.dat file> <xpos> <ypos>' % sys.argv[0]
         sys.exit(1)
 
+    xpos, ypos = int(sys.argv[2]), int(sys.argv[3])
     dat_path = os.path.abspath(sys.argv[1])
-    dat_filename = os.path.splitext(os.path.basename(dat_path))[0]
-    plot_dir = PNGDIR + dat_filename + '_' + \
-        datetime.datetime.now().strftime('%Y%m%d-%H%M%S') + '/'
+    # dat_filename = os.path.splitext(os.path.basename(dat_path))[0]
+    plot_dir = PNGDIR + VERMAGIC + '_' + '%02d' % xpos + '_' + '%02d' % ypos + '/'
+    if os.path.exists(plot_dir):
+        shutil.rmtree(plot_dir)
     os.mkdir(plot_dir)
 
     octave.addpath('~/csi/linux-80211n-csitool-supplementary/matlab')
@@ -95,6 +98,15 @@ if __name__ == '__main__':
     octave.eval("csi_trace = read_bf_file('" + dat_path + "');")
     pkts = octave.eval("rows(csi_trace);")
     print 'Trace has', pkts, 'packets.'
+
+    if os.path.exists(JSON_NAME):
+        with open(JSON_NAME, 'rt') as infile:
+            csi_dict = json.load(infile)
+    else:
+        csi_dict = {}
+
+    # overwrite is permitted
+    csi_dict[str((xpos, ypos))] = []
 
     for pkt in range(1, int(pkts) + 1):  # Octave indexes from 1
         octave.eval("csi_entry = csi_trace{" + str(pkt) + "};")
@@ -108,8 +120,7 @@ if __name__ == '__main__':
 
         mat_contents = sio.loadmat(MATDIR + 'temp.mat')['csi']
         plot_csi(mat_contents, pkt)
-        jsonify_csi(mat_contents, [rssi_a, rssi_b, rssi_c], pkt,
-            xpos=randint(0, 21), ypos=randint(0, 42))
+        jsonify_csi(mat_contents, [rssi_a, rssi_b, rssi_c], pkt, xpos, ypos)
 
-    with open('json/data.json', 'wt') as outfile:
+    with open(JSON_NAME, 'w+') as outfile:
         json.dump(csi_dict, outfile, sort_keys=True, indent=4)
