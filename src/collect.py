@@ -117,8 +117,8 @@ if __name__ == '__main__':
         octave.eval("save -6 " + MATDIR + "temp.mat csi;")
 
         mat_contents = sio.loadmat(MATDIR + 'temp.mat')['csi']
-        plot_csi(mat_contents, pkt)
         jsonify_csi(mat_contents, [rssi_a, rssi_b, rssi_c], pkt, xpos, ypos)
+        plot_csi(mat_contents, pkt)
 
     with open(JSON_NAME, 'w+') as outfile:
         json.dump(csi_dict, outfile, sort_keys=True, indent=4)
