@@ -5,16 +5,16 @@ Created on Jul 29, 2015
 @author: adrian
 '''
 
-from oct2py import octave
-from pylab import *  # @UnusedWildImport
-
 import json
 import os
 import scipy.io as sio
 import shutil
 import sys
 
+
+from oct2py import octave
 from pprint import pprint
+from pylab import *  # @UnusedWildImport
 
 
 PNGDIR = os.path.abspath('.') + '/png/'
@@ -24,6 +24,7 @@ label_on = False
 
 VERMAGIC = datetime.datetime.now().strftime("data_%m%d")
 JSON_NAME = 'json/' + VERMAGIC + '.json'
+
 
 def jsonify_csi(csi_contents, rssi, pkt_index, xpos, ypos):
 
@@ -87,8 +88,9 @@ if __name__ == '__main__':
 
     xpos, ypos = int(sys.argv[2]), int(sys.argv[3])
     dat_path = os.path.abspath(sys.argv[1])
-    # dat_filename = os.path.splitext(os.path.basename(dat_path))[0]
-    plot_dir = PNGDIR + VERMAGIC + '_' + '%02d' % xpos + '_' + '%02d' % ypos + '/'
+
+    plot_dir = PNGDIR + VERMAGIC + '_' + \
+        '%02d' % xpos + '_' + '%02d' % ypos + '/'
     if os.path.exists(plot_dir):
         shutil.rmtree(plot_dir)
     os.mkdir(plot_dir)
@@ -108,8 +110,8 @@ if __name__ == '__main__':
     # overwrite is permitted
     csi_dict[str((xpos, ypos))] = []
 
-    for pkt in range(1, int(pkts) + 1):  # Octave indexes from 1
-        octave.eval("csi_entry = csi_trace{" + str(pkt) + "};")
+    for index in range(1, int(pkts) + 1):  # Octave indexes from 1
+        octave.eval("csi_entry = csi_trace{" + str(index) + "};")
         rssi_a, rssi_b, rssi_c = octave.eval("csi_entry.rssi_a;"), \
             octave.eval("csi_entry.rssi_b;"), octave.eval("csi_entry.rssi_c;")
 
@@ -117,8 +119,8 @@ if __name__ == '__main__':
         octave.eval("save -6 " + MATDIR + "temp.mat csi;")
 
         mat_contents = sio.loadmat(MATDIR + 'temp.mat')['csi']
-        jsonify_csi(mat_contents, [rssi_a, rssi_b, rssi_c], pkt, xpos, ypos)
-        plot_csi(mat_contents, pkt)
+        jsonify_csi(mat_contents, [rssi_a, rssi_b, rssi_c], index, xpos, ypos)
+        plot_csi(mat_contents, index)
 
     with open(JSON_NAME, 'w+') as outfile:
         json.dump(csi_dict, outfile, sort_keys=True, indent=4)
