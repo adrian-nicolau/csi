@@ -86,26 +86,35 @@ if __name__ == '__main__':
         print 'Usage: $ %s <.dat file> <xpos> <ypos>' % sys.argv[0]
         sys.exit(1)
 
-    xpos, ypos = int(sys.argv[2]), int(sys.argv[3])
-    dat_path = os.path.abspath(sys.argv[1])
+    # online phase
+    if (sys.argv[2] == '?' and sys.argv[3] == '?'):
+        JSON_NAME = 'json/online.json'
+        plot_dir = PNGDIR + VERMAGIC + '_?_?/'
+        csi_dict = {}
+        xpos, ypos = '?', '?'
 
-    plot_dir = PNGDIR + VERMAGIC + '_' + \
-        '%02d' % xpos + '_' + '%02d' % ypos + '/'
+    # offline phase
+    else:
+        xpos, ypos = int(sys.argv[2]), int(sys.argv[3])
+        plot_dir = PNGDIR + VERMAGIC + '_' + \
+            '%02d' % xpos + '_' + '%02d' % ypos + '/'
+
+        if os.path.exists(JSON_NAME):
+            with open(JSON_NAME, 'rt') as infile:
+                csi_dict = json.load(infile)
+        else:
+            csi_dict = {}
+
     if os.path.exists(plot_dir):
         shutil.rmtree(plot_dir)
     os.mkdir(plot_dir)
 
+    dat_path = os.path.abspath(sys.argv[1])
     octave.addpath('~/csi/linux-80211n-csitool-supplementary/matlab')
     # FAQ #2
     octave.eval("csi_trace = read_bf_file('" + dat_path + "');")
     pkts = octave.eval("rows(csi_trace);")
     print 'Trace has', pkts, 'packets.'
-
-    if os.path.exists(JSON_NAME):
-        with open(JSON_NAME, 'rt') as infile:
-            csi_dict = json.load(infile)
-    else:
-        csi_dict = {}
 
     # overwrite is permitted
     csi_dict[str((xpos, ypos))] = []

@@ -10,8 +10,13 @@ Client-AP Angle Measurement with 802.11n Channel State Information
 ## dev
 
 ```bash
-[csi] $ sudo ./run.sh
-[csi] $ eog png/data_0721_01_01/0001.png
-[csi] $ ./src/fingerprint.py json/data_0721.json
+# Collect CSI
+[csi] $ sudo ./run_collect.sh
+# Display CSI plots
+[csi] $ eog png/data_0724_01_01/0001.png
+# Find current position based on what has been collected before
+[csi] $ sudo ./run_findme.sh json/data_0724.json
+
+# (Optional) Start real-time CSI visualizer
 [csi/electron] $ sudo npm start
 ```

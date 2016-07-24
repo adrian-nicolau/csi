@@ -15,7 +15,7 @@ while true; do
     # sleep 10
 
     # Start collecting CSI for an adaptive ping.
-    sudo ping -Aq 192.168.1.1 &
+    sudo ping -Aq 192.168.43.1 &
     sudo ext/log_to_file_3ant_10pkts dat/temp.dat
 
     sudo killall ping
@@ -28,7 +28,7 @@ while true; do
     # PNGDIR=`ls -t png/ | head -n 1`
     # eog png/$PNGDIR/0001.png
 
-    read -p "Press something to get to next iteration.."
+    read -p "Press something to get to next iteration.. (or Ctrl-C to exit)"
 done
 
 exit 0
