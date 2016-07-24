@@ -9,10 +9,9 @@ Client-AP Angle Measurement with 802.11n Channel State Information
 
 ## dev
 
-`[csi] $ sudo ./run.sh`
-
-`[csi] $ eog png/data_0721_01_01/0001.png`
-
-`[csi] $ ./src/fingerprint.py json/data_0721.json`
-
-`[csi/electron] $ sudo npm start`
+```bash
+[csi] $ sudo ./run.sh
+[csi] $ eog png/data_0721_01_01/0001.png
+[csi] $ ./src/fingerprint.py json/data_0721.json
+[csi/electron] $ sudo npm start
+```
