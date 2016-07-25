@@ -5,6 +5,9 @@ Created on Jul 29, 2015
 @author: adrian
 '''
 
+import matplotlib
+matplotlib.use('Agg')
+
 import json
 import os
 import scipy.io as sio

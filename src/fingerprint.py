@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
 from __future__ import division
+
+import matplotlib
+matplotlib.use('Agg')
+
 from copy import deepcopy
 from pprint import pprint
 from pylab import *  # @UnusedWildImport

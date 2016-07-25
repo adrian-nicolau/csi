@@ -3,7 +3,7 @@
 ws='/home/adrian/workspace/csi'
 
 # Start an adaptive ping for the whole script run.
-ping -Aq 192.168.1.1 &
+ping -Aq 192.168.43.1 &
 
 while true; do
   # Start collecting CSI.
