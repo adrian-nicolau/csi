@@ -25,8 +25,8 @@ def find_my_pos(k=1):
     for pos in euclideans:
         curr_score = (euclideans[pos]['dist_csi_a'] +
                       euclideans[pos]['dist_csi_b'] +
-                      euclideans[pos]['dist_csi_c']) * 0.75
-        curr_score += euclideans[pos]['dist_rssi'] * 1.25
+                      euclideans[pos]['dist_csi_c'])
+        curr_score += euclideans[pos]['dist_rssi']
 
         print pos, curr_score
 
@@ -86,6 +86,8 @@ def average_csi(pos, data, outdict):
             node[antenna] = [abs(complex(x)) for x in node[antenna]]
             # power
             node[antenna] = [pow(x, 2) for x in node[antenna]]
+            # get rid of RuntimeWarning: divide by zero encountered in log10
+            node[antenna] = [0.1 if x == 0.0 else x for x in node[antenna]]
             # dB
             node[antenna] = 10. * np.log10(node[antenna])
 
@@ -124,7 +126,7 @@ if __name__ == '__main__':
         euclidean_distance(offline_avg[pos], online_avg["('?', '?')"], pos)
 
     # pprint(offline_avg)
-    pprint(online_avg)
-    pprint(euclideans)
+    # pprint(online_avg)
+    # pprint(euclideans)
     rpos = find_my_pos()
     print 'You are probably located at', rpos

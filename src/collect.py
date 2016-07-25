@@ -59,6 +59,8 @@ def plot_csi(csi_contents, pkt_number):
         csi_contents[antenna] = [abs(x) for x in csi_contents[antenna]]
         # power
         csi_contents[antenna] = [pow(x, 2) for x in csi_contents[antenna]]
+        # get rid of RuntimeWarning: divide by zero encountered in log10
+        csi_contents[antenna] = [0.1 if x == 0.0 else x for x in csi_contents[antenna]]
         # dB
         csi_contents[antenna] = 10. * np.log10(csi_contents[antenna])
         # We no longer have complex numbers, so remove +0j
@@ -113,7 +115,7 @@ if __name__ == '__main__':
     os.mkdir(plot_dir)
 
     dat_path = os.path.abspath(sys.argv[1])
-    octave.addpath('~/csi/linux-80211n-csitool-supplementary/matlab')
+    octave.addpath('/home/adrian/csi/linux-80211n-csitool-supplementary/matlab')
     # FAQ #2
     octave.eval("csi_trace = read_bf_file('" + dat_path + "');")
     pkts = octave.eval("rows(csi_trace);")
