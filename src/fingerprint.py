@@ -11,6 +11,7 @@ from pylab import *  # @UnusedWildImport
 
 import json
 import numpy as np
+import re
 import sys
 
 
@@ -19,22 +20,34 @@ online_avg = {}
 euclideans = {}
 
 
-def find_my_pos(k=1):
-    score = sys.maxint
+def find_my_pos(k=3, csi_factor=1, rssi_factor=1):
+    costs = []
+    costs_per_pos = {}
 
     for pos in euclideans:
-        curr_score = (euclideans[pos]['dist_csi_a'] +
-                      euclideans[pos]['dist_csi_b'] +
-                      euclideans[pos]['dist_csi_c'])
-        curr_score += euclideans[pos]['dist_rssi']
+        cost = (euclideans[pos]['dist_csi_a'] +
+                euclideans[pos]['dist_csi_b'] +
+                euclideans[pos]['dist_csi_c']) * csi_factor
+        cost += euclideans[pos]['dist_rssi'] * rssi_factor
 
-        print pos, curr_score
+        print pos, cost
+        costs.append(cost)
+        costs_per_pos[pos] = cost
 
-        if curr_score < score:
-            score = curr_score
-            rpos = pos
+    best_k_costs = sorted(costs)[:k]
+    if len(best_k_costs) < k:
+        k = len(best_k_costs)
 
-    return rpos
+    x_total, y_total = 0, 0
+
+    for cost in best_k_costs:
+        for pos, value in costs_per_pos.iteritems():
+            if cost == value:
+                pos = re.sub('[(,)]', '', pos)
+                x_total += float(pos.split(' ')[0])
+                y_total += float(pos.split(' ')[1])
+
+    return '(' + str(x_total / k) + ', ' + str(y_total / k) + ')'
 
 
 def euclidean_distance(data1, data2, pos):
