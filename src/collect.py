@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # online phase
     if (sys.argv[2] == '?' and sys.argv[3] == '?'):
         JSON_NAME = 'json/online.json'
-        plot_dir = PNGDIR + VERMAGIC + '_?_?/'
+        plot_dir = PNGDIR + VERMAGIC + '_NA_NA/'
         csi_dict = {}
         xpos, ypos = '?', '?'
 
