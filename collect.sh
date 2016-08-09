@@ -12,7 +12,7 @@ while true; do
     echo "You are at ($xpos, $ypos)"
 
     # Allow me to go to the the indicated position :-).
-    sleep 5
+    # sleep 5
 
     # Start collecting CSI for an adaptive ping.
     sudo ping -Aq 192.168.43.1 &

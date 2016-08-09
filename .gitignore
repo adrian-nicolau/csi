@@ -58,3 +58,7 @@ target/
 
 # Matlab .mat files
 mat/
+
+# CTags
+.tags
+.tags_sorted_by_file
