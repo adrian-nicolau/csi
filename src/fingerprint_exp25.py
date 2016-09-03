@@ -3,7 +3,7 @@
 from __future__ import division
 
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 
 from copy import deepcopy
 from pprint import pprint
@@ -46,8 +46,15 @@ ONLINE_POINTS = [
     '(4, 3)'
 ]
 
+PLOT_3D_DATA_X = [eval(p)[0] for p in ONLINE_POINTS]
+PLOT_3D_DATA_Y = [eval(p)[1] for p in ONLINE_POINTS]
+PLOT_3D_DATA_Z = []
+
+total_error = 0
 
 def where_am_i(online_point):
+    global total_error
+
     euclid_diag1 = euclidean_distance(
         online_point=online_point,
         avg_dict=csi_avg_dict_diag1
@@ -66,9 +73,12 @@ def where_am_i(online_point):
     p3 = find_pos(online_point, euclid_diag2)
 
     final = ((p1[0] + p2[0] + p3[0]) / 3, (p1[1] + p2[1] + p3[1]) / 3)
-    print online_point, 'detected at', p1, p2, p3, '=>', final
+    error = np.linalg.norm(np.array(final) - np.array(eval(online_point)))
+    print online_point, 'detected at', final, 'with error', error
 
-    return str(final)
+    total_error += error
+
+    return error
 
 
 def find_pos(online_point, euclideans, k=3, csi_factor=1, rssi_factor=1):
@@ -214,4 +224,24 @@ if __name__ == '__main__':
     csi_avg_dict_diag2 = average_dict(csi_full_dict_diag2)
 
     for online_point in ONLINE_POINTS:
-        where_am_i(online_point)
+        error = where_am_i(online_point)
+        PLOT_3D_DATA_Z.append(error)
+    print total_error
+
+    from mpl_toolkits.mplot3d import Axes3D
+    import matplotlib.pyplot as plt
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    zpos = [0 for _ in range(len(PLOT_3D_DATA_Z))]
+    dx = np.ones(len(PLOT_3D_DATA_X))
+    dy = np.ones(len(PLOT_3D_DATA_Y))
+
+    ax.bar3d(PLOT_3D_DATA_X, PLOT_3D_DATA_Y, zpos, dx, dy, PLOT_3D_DATA_Z, color='#ff0000')
+
+    ax.set_xlabel('Ox')
+    ax.set_ylabel('Oy')
+    ax.set_zlabel('Error')
+
+    plt.show()
