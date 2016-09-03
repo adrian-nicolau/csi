@@ -15,7 +15,7 @@ import re
 import sys
 
 
-OFFLINE_POINTS = [
+ONLINE_POINTS = [
     '(0, 0)',
     '(0, 2)',
     '(0, 4)',
@@ -30,7 +30,7 @@ OFFLINE_POINTS = [
     '(4, 4)'
 ]
 
-ONLINE_POINTS = [
+OFFLINE_POINTS = [
     '(0, 1)',
     '(0, 3)',
     '(1, 0)',
@@ -229,8 +229,8 @@ def interpolate_data():
                 extent=[x.min(), x.max(), y.min(), y.max()])
     plt.scatter(x, y, c=z, marker='o', s=50)
     plt.colorbar()
-    plt.xlabel('X (m)')
-    plt.ylabel('Y (m)')
+    plt.xlabel('X axis')
+    plt.ylabel('Y axis')
 
     plt.show()
 
