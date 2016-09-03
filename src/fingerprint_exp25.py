@@ -227,9 +227,11 @@ def interpolate_data():
 
     plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
                 extent=[x.min(), x.max(), y.min(), y.max()])
-    plt.gca().invert_yaxis()
     plt.scatter(x, y, c=z, marker='o', s=50)
     plt.colorbar()
+    plt.xlabel('Ox')
+    plt.ylabel('Oy')
+
     plt.show()
 
 
@@ -253,6 +255,8 @@ if __name__ == '__main__':
         error = where_am_i(online_point)
         PLOT_3D_DATA_Z.append(error)
     print total_error
+    print 'mean', total_error / len(ONLINE_POINTS)
+    print 'median', np.median(PLOT_3D_DATA_Z)
 
     interpolate_data()
 
