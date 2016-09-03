@@ -15,7 +15,7 @@ import re
 import sys
 
 
-OFFLINE_POINTS = [
+ONLINE_POINTS = [
     '(0, 0)',
     '(0, 2)',
     '(0, 4)',
@@ -30,7 +30,7 @@ OFFLINE_POINTS = [
     '(4, 4)'
 ]
 
-ONLINE_POINTS = [
+OFFLINE_POINTS = [
     '(0, 1)',
     '(0, 3)',
     '(1, 0)',
@@ -81,7 +81,7 @@ def where_am_i(online_point):
     return error
 
 
-def find_pos(online_point, euclideans, k=3, csi_factor=1, rssi_factor=1):
+def find_pos(online_point, euclideans, k=3, csi_factor=1, rssi_factor=0):
     costs = []
     costs_per_pos = {}
 
@@ -207,6 +207,32 @@ def average_dict(full_dict):
     return avg_dict
 
 
+def interpolate_data():
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.interpolate
+    from operator import itemgetter
+
+    x = np.array(PLOT_3D_DATA_X)
+    y = np.array(PLOT_3D_DATA_Y)
+    z = np.array(PLOT_3D_DATA_Z)
+
+    # Set up a regular grid of interpolation points
+    xi, yi = np.linspace(x.min(), x.max()), np.linspace(y.min(), y.max())
+    xi, yi = np.meshgrid(xi, yi)
+
+    # Interpolate
+    rbf = scipy.interpolate.Rbf(x, y, z, function='linear')
+    zi = rbf(xi, yi)
+
+    plt.imshow(zi, vmin=z.min(), vmax=z.max(), origin='lower',
+                extent=[x.min(), x.max(), y.min(), y.max()])
+    plt.gca().invert_yaxis()
+    plt.scatter(x, y, c=z, marker='o', s=50)
+    plt.colorbar()
+    plt.show()
+
+
 if __name__ == '__main__':
 
     # Open all three databases
@@ -228,20 +254,22 @@ if __name__ == '__main__':
         PLOT_3D_DATA_Z.append(error)
     print total_error
 
-    from mpl_toolkits.mplot3d import Axes3D
-    import matplotlib.pyplot as plt
+    interpolate_data()
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    # from mpl_toolkits.mplot3d import Axes3D
+    # import matplotlib.pyplot as plt
 
-    zpos = [0 for _ in range(len(PLOT_3D_DATA_Z))]
-    dx = np.ones(len(PLOT_3D_DATA_X))
-    dy = np.ones(len(PLOT_3D_DATA_Y))
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
 
-    ax.bar3d(PLOT_3D_DATA_X, PLOT_3D_DATA_Y, zpos, dx, dy, PLOT_3D_DATA_Z, color='#ff0000')
+    # zpos = [0 for _ in range(len(PLOT_3D_DATA_Z))]
+    # dx = np.ones(len(PLOT_3D_DATA_X))
+    # dy = np.ones(len(PLOT_3D_DATA_Y))
 
-    ax.set_xlabel('Ox')
-    ax.set_ylabel('Oy')
-    ax.set_zlabel('Error')
+    # ax.bar3d(PLOT_3D_DATA_X, PLOT_3D_DATA_Y, zpos, dx, dy, PLOT_3D_DATA_Z, color='#ff0000')
 
-    plt.show()
+    # ax.set_xlabel('Ox')
+    # ax.set_ylabel('Oy')
+    # ax.set_zlabel('Error')
+
+    # plt.show()
